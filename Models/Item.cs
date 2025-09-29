@@ -1,0 +1,6 @@
+namespace TradingApp;
+
+class Item
+{
+
+}

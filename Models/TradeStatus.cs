@@ -1,0 +1,1 @@
+// Här vill jag ha en enum på Trade statusen 
