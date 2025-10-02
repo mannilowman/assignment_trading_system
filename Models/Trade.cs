@@ -1,26 +1,34 @@
 
 using System.ComponentModel.Design;
 using System.Data.Common;
-/*
-namespace App;
+using System.Runtime.CompilerServices;
 
+namespace TradingApp;
+
+// 
 class Trade
 {
-    public int Id;
-    public string FromEmail;
-    public string ToEmail;
+    public int Id { get; set; } = 0; // unique trade id
 
-    public string RequestedItemId;
+    public int ItemId { get; set; } = 0; // unique item id 
 
-    public string tradeStatus Status;
+    public string FromUsername { get; set; } = ""; // The requesting trade user
 
-    public Trade(int id, string fromEmail, string ToEmail, string offeredItemId, string RequestedItemId)
+    public string ToUsername { get; set; } = ""; // the user that's recieving the request (owner of the item)
+
+    public string Status { get; set; } = "pending";  // Trade status is goes in order "Pending", "Accepted or Denied", Completed
+
+    public Trade(int id, int itemId, string fromUsername, string toUsername, string status)
     {
-        Id = id;
-        FromEmail = fromEmail;
-        
+        Id = id;   // saving TradeId
+
+        ItemId = itemId;  // saving Item id attached to the specific trade
+
+        FromUsername = fromUsername;  // saving requesting trade user
+
+        ToUsername = toUsername; // saving reciever 
+
+        Status = status; // saving trade status 
     }
 }
-
-*/
 

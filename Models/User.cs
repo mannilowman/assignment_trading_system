@@ -1,5 +1,5 @@
 using System.Diagnostics;
-namespace App;
+namespace TradingApp;
 
 class User
 {
@@ -16,5 +16,10 @@ class User
     {
         return username == Username && password == Password;
 
+    }
+
+    public override string ToString()
+    {
+        return $"Username: {Username}";
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections;
-using App;
-
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using TradingApp;
 
 // TODO A user needs to be able to register an account
 // TODO A user needs to be able to upload information about the item they with to trade.
@@ -15,44 +17,132 @@ using App;
 // All the data for the different lists is from the different classes (User,Item,Trade).
 // I've named them users,items & trades.
 
-List<User> users = new List<User>(); 
-//List<Item> items = new List<Item>();
-//List<Trade> trades = new List<Trade>();
+List<User> users = new List<User>(); // Creating List with all the registered users
+List<Item> items = new List<Item>(); // Creating List with all the registered items
+List<Trade> trades = new List<Trade>(); // Creating List with all the trades
 
+// Two created Demo users for testing the program.
 users.Add(new User("Manni", "1")); // User 1 
 users.Add(new User("Test", "1")); // User 2 
 
+
+
+int nextItemId = 1; // Counter for items
+int nextTradeId = 1; // Counter for trades
+
+
+bool running = true; // Controlling the Main Loop, keeps the program going.
 User? active_user = null; //default value is null, meaning no user is logged in.
-bool running = true;
+
 
 // Main Loop
 while (running)
 {
-    Console.Clear();
-
-    if (active_user == null)
+    Console.Clear(); // Clearing the screen to make the menu clear.
+    //       Starting Menu "Offline Mode"
+    if (active_user == null) // Controlling if someones logged in.
     {
-        //       Starting Menu "Offline Mode"
-        Console.WriteLine("\n--- Welcome to my TradingApp ---");
-        Console.WriteLine("1) Register");
-        Console.WriteLine("2) Login");
-        Console.WriteLine("3) Exit");
-        Console.Write("Choose an option: ");
 
-        string? choice = Console.ReadLine(); // Save the chosen menu option
-        switch (choice)
+        Console.WriteLine("\n--- Welcome to my TradingApp ---"); // Title info.
+        Console.WriteLine("1) Register"); // Menu choice 1.
+        Console.WriteLine("2) Login"); // Menu choice 2.
+        Console.WriteLine("3) Exit"); // Menu choice 3.
+        Console.Write("Choose an option: "); // Type your menu choice.
+
+        string? choice = Console.ReadLine(); // Reading the chosen menu option.
+        switch (choice) // Choosing behavior based on input
         {
             case "1": // Register an user
+
+                RegisterUser(users); // Calling the method(sending the list with users)
+
+                break; // stopping the case, back to menu.
+
+
+            case "2": // Log in user 
+
+                Console.Clear();
+                Console.Write("Write username: ");
+
+                String username = Console.ReadLine();
+
+                Console.Write("Write password: ");
+                String password = Console.ReadLine();
+
+                foreach (User user in users)
                 {
-                    RegisterUser(users);
-
-                    break;
-
+                    if (user.TryLogin(username, password))
+                    {
+                        active_user = user;
+                        break;
+                    }
                 }
 
+                if (!users.Contains(active_user))
+                {
+                    System.Console.WriteLine("Login failed. Press enter to continue");
+                    Console.ReadLine();
+                    continue;
+                }
+                break;
 
+            case "3": // Exit
+                running = false; // Exit program
 
+                break;
 
+            default:
+                Console.WriteLine("Invalid choice. Press Enter to continue...");
+                Console.ReadLine();  // waiting for user to press Enter
+
+                break;
+        }
+    }
+    else
+    {
+        Console.WriteLine($"Welcome {active_user}");
+
+        Console.WriteLine("Trading Menu");
+        Console.WriteLine("----    ----");
+        Console.WriteLine("1. Add an item");
+        Console.WriteLine("2. Avaible trading items");
+        Console.WriteLine("Request a trade");
+        Console.WriteLine("Browse trade requests");
+        Console.WriteLine("Browse completed trades");
+        Console.WriteLine("Logout");
+
+        string? choice = Console.ReadLine();
+        switch (choice)
+        {
+            case "1":
+                AddItem(); // Adding an item
+
+                break;
+
+            case "2":
+                /*                 SeeAvaibleItems(); // List of avaible items
+                 */
+                break;
+
+            case "3":
+                /*                 RequestTrade(); // Requesting a trade
+                 */
+                break;
+
+            case "4":
+                /*                 BrowseTradeRequests(); // Browse list of trade  requests
+                 */
+                break;
+
+            case "5":
+                /*                 BrowseCompletedTrades(); // Browse list of completed trades
+                 */
+                break;
+
+            case "6":
+                active_user = null; // Log out
+
+                break;
 
         }
     }
@@ -64,15 +154,16 @@ static void RegisterUser(List<User> users)
     Console.Write("New username: ");
     string newUsername = Console.ReadLine() ?? "";
     Console.Write("New password: ");
-    string NewPass = Console.ReadLine() ?? "";
-    // Quick check to see that the username doesnt exist
-    foreach (User user in users)
-    {
-        if (user.Username == newUsername)
-        {
-            Console.WriteLine("Username exists");
-            Thread.Sleep(3000); // "Pausing program to show the information"
-            break;
-        }
-    }
+    string newPassword = Console.ReadLine() ?? "";
+
+
+    // CREATE ERROR HANDLING FOR EXISTING USERNAME
+    // IF USER EXISTS, DO NOTHING
+    // IF USER DOESNT EXIST, CREATE NEW USER
+    users.Add(new User(newUsername, newPassword));
+}
+
+void AddItem()
+{
+    
 }
