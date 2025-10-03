@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.WebSockets;
 using TradingApp;
 
 // TODO A user needs to be able to register an account
@@ -106,10 +107,10 @@ while (running)
         Console.WriteLine("----    ----");
         Console.WriteLine("1. Add an item");
         Console.WriteLine("2. Avaible trading items");
-        Console.WriteLine("Request a trade");
-        Console.WriteLine("Browse trade requests");
-        Console.WriteLine("Browse completed trades");
-        Console.WriteLine("Logout");
+        Console.WriteLine("3. Request a trade");
+        Console.WriteLine("4. Browse trade requests");
+        Console.WriteLine("5. Browse completed trades");
+        Console.WriteLine("6. Logout");
 
         string? choice = Console.ReadLine();
         switch (choice)
@@ -148,20 +149,54 @@ while (running)
     }
 }
 
-static void RegisterUser(List<User> users)
+static void RegisterUser(List<User> users)                     // Receives the list with all registered users
 {
-    Console.Clear();
-    Console.Write("New username: ");
-    string newUsername = Console.ReadLine() ?? "";
-    Console.Write("New password: ");
-    string newPassword = Console.ReadLine() ?? "";
+    Console.Clear();                                           // Clearing the screen to make the form clear
+    Console.WriteLine("--- Register ---");                     // Title info
 
+    Console.Write("New username: ");                           // Ask user to enter a username
+    string newUsername = Console.ReadLine() ?? "";             // Read username (fallback to empty string if null)
 
-    // CREATE ERROR HANDLING FOR EXISTING USERNAME
-    // IF USER EXISTS, DO NOTHING
-    // IF USER DOESNT EXIST, CREATE NEW USER
-    users.Add(new User(newUsername, newPassword));
+    Console.Write("New password: ");                           // Ask user to enter a password
+    string newPassword = Console.ReadLine() ?? "";             // Read password (fallback to empty string if null)
+
+    // Basic validation, username and password must not be empty
+    if (newUsername == "" || newPassword == "")                // Check for empty inputs
+    {
+        Console.WriteLine("Username and password are required."); // Inform user about missing fields
+        Console.WriteLine("Press Enter to continue...");       // Wait so the user can read the message
+        Console.ReadLine();                                    // Pause until Enter is pressed
+        return;                                                // Stop the method without creating a user
+    }
+
+    // Check if the username already exists in the list
+    bool exists = false;                                       // Flag to remember if we found a duplicate
+    foreach (User user in users)                               // Loop through all existing users
+    {
+        if (user.Username == newUsername)                      // Exact string match (case-sensitive)
+        {
+            exists = true;                                     // Set the flag if a duplicate is found
+            break;                                             // Stop the loop (no need to continue searching)
+        }
+    }
+
+    if (exists)                                                // If the username is already taken
+    {
+        Console.WriteLine("Username already exists. Choose another."); // Inform the user
+        Console.WriteLine("Press Enter to continue...");       // Wait so the user can read the message
+        Console.ReadLine();                                    // Pause until Enter is pressed
+        return;                                                // Do nothing more (no new user created)
+    }
+
+    // Create and save the new user (only if the username did not exist)
+    User newUser = new User(newUsername, newPassword);         // Create a new User object with the provided data
+    users.Add(newUser);                                        // Add the new user to the list (our in-memory "database")
+
+    Console.WriteLine("Registration successful!");             // Confirmation message
+    Console.WriteLine("Press Enter to continue...");           // Wait so the user can read the message
+    Console.ReadLine();                                        // Pause until Enter is pressed
 }
+
 
 void AddItem()
 {
