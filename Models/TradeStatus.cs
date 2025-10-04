@@ -1,1 +1,12 @@
-// Här vill jag ha en enum på Trade statusen 
+public enum TradingStatus
+{
+    None,
+
+    Pending,
+
+    Denied,
+
+    Accepted,
+
+    Completed,
+}

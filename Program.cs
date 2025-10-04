@@ -87,7 +87,7 @@ while (running)
                 }
                 break;
 
-            case "3": // Exit
+            case "3": 
                 running = false; // Exit program
 
                 break;
@@ -100,53 +100,60 @@ while (running)
         }
     }
     else
+    Console.WriteLine("--- Welcome dear " + active_user.Username + " ---"); // Greeting with actual username
+    Console.WriteLine();                                                    // Empty line for spacing
+    Console.WriteLine("1. Upload item");                                    // Option 1
+    Console.WriteLine("2. Browse trough items");                            // Option 2
+    Console.WriteLine("3. Request a trade from another");                   // Option 3
+    Console.WriteLine("4. See your sent trade requests");                   // Option 4 (only Pending sent by logged in user)
+    Console.WriteLine("5. Accept or deny a request");                       // Option 5 (incoming requests to logged in user)
+    Console.WriteLine("6. Browse trough completed trades");                 // Option 6 (Accepted/Denied/Completed)
+    Console.WriteLine("7. See your sended requests");                       // Option 7 (all your sent, any status)
+    Console.WriteLine("8. Logout");                                         // Option 8
+    Console.Write("Choose an option: ");                                     //  input option 
+
+    string userInput = Console.ReadLine() ?? "";                              // Read the user's choice (empty if null)
+
+    switch (userInput)                                                         // Handle the selected option
     {
-        Console.WriteLine($"Welcome {active_user}");
+        case "1": //    
+            nextItemId = AddItem(items, active_user, nextItemId);             // Create item and update counter via return value
+            break;
 
-        Console.WriteLine("Trading Menu");
-        Console.WriteLine("----    ----");
-        Console.WriteLine("1. Add an item");
-        Console.WriteLine("2. Avaible trading items");
-        Console.WriteLine("3. Request a trade");
-        Console.WriteLine("4. Browse trade requests");
-        Console.WriteLine("5. Browse completed trades");
-        Console.WriteLine("6. Logout");
+       case "2":  
+            ShowUsersAndItems(users, items);                                   // Print every user and items they own
+            break;
 
-        string? choice = Console.ReadLine();
-        switch (choice)
-        {
-            case "1":
-                AddItem(); // Adding an item
+        case "3": 
+            nextTradeId = RequestTrade(items, trades, active_user, nextTradeId); // Create trade and update counter via return value
+            break;
 
-                break;
+        case "4":  
+            ShowMySentPendingTrades(trades, active_user);                      // Show outgoing trades that are still Pending
+            break;
 
-            case "2":
-                /*                 SeeAvaibleItems(); // List of avaible items
-                 */
-                break;
+        case "5":  
+            BrowseTradeRequests(trades, active_user);                          // Accept / Deny incoming Pending trades
+            break;
 
-            case "3":
-                /*                 RequestTrade(); // Requesting a trade
-                 */
-                break;
+        case "6":  
+            BrowseCompletedTrades(trades, active_user);                        // Show non-Pending trades where you are involved
+            break;
 
-            case "4":
-                /*                 BrowseTradeRequests(); // Browse list of trade  requests
-                 */
-                break;
+        case "7":  
+            ShowAllMySentTrades(trades, active_user);                          // Show all outgoing trades (any status)
+            break;
 
-            case "5":
-                /*                 BrowseCompletedTrades(); // Browse list of completed trades
-                 */
-                break;
+        case "8":  
+            active_user = null;                                                // Clear the session and return to offline menu
+        break;
 
-            case "6":
-                active_user = null; // Log out
+        default: 
+            Console.WriteLine("Invalid choice. Press Enter to continue...");   // Inform the user
+            Console.ReadLine();                                                // Pause so the user can read
+            break;
+}
 
-                break;
-
-        }
-    }
 }
 
 static void RegisterUser(List<User> users)                     // Receives the list with all registered users
@@ -160,7 +167,7 @@ static void RegisterUser(List<User> users)                     // Receives the l
     Console.Write("New password: ");                           // Ask user to enter a password
     string newPassword = Console.ReadLine() ?? "";             // Read password (fallback to empty string if null)
 
-    // Basic validation, username and password must not be empty
+    
     if (newUsername == "" || newPassword == "")                // Check for empty inputs
     {
         Console.WriteLine("Username and password are required."); // Inform user about missing fields
@@ -169,7 +176,7 @@ static void RegisterUser(List<User> users)                     // Receives the l
         return;                                                // Stop the method without creating a user
     }
 
-    // Check if the username already exists in the list
+    
     bool exists = false;                                       // Flag to remember if we found a duplicate
     foreach (User user in users)                               // Loop through all existing users
     {
@@ -195,10 +202,112 @@ static void RegisterUser(List<User> users)                     // Receives the l
     Console.WriteLine("Registration successful!");             // Confirmation message
     Console.WriteLine("Press Enter to continue...");           // Wait so the user can read the message
     Console.ReadLine();                                        // Pause until Enter is pressed
-}
+    }
 
 
-void AddItem()
-{
+    static int AddItem(List<Item> items, User active_user, int nextItemId) // Create item (id, owner, name, description)
+    {
+    Console.Clear();  // Clear screen
+    Console.Write("--- Add item---"); // Item title
+
+    Console.Write("Item name: "); // Ask for name
+    String name = Console.ReadLine() ?? ""; // read name
+
+    if (name == "") // validate name
+    {
+        Console.WriteLine("Invalid input. Please try again.");
+        Console.WriteLine("Press Enter to continue.. ");
+        Console.ReadLine();
+        return nextItemId;  // no change
+    }
+
+    Console.Write("Description: "); //  ask for description 
+    string description = Console.ReadLine() ?? ""; // read description 
+
+    if (description == "") // validate description 
+    {
+        Console.WriteLine("Invalid input. Please try again. ");
+        Console.WriteLine("Press Enter to continue.. ");
+        Console.ReadLine();
+        return nextItemId; // no change 
+    }
+
+    Item createdItem = new Item(nextItemId, active_user.Username, name, description); // create item, id, owner, name, description 
+
+    items.Add(createdItem); // save item
+
+    nextItemId = nextItemId + 1; // increase counter 
+
+    Console.WriteLine("Item uploaded."); // confirmation 
+    Console.ReadLine();
+
+    return nextItemId; // return updated counter 
+
+    }
+
+    // Show every user and the items they own
+
+    static void ShowUsersAndItems(List<User> users, List<Item> items)
+    {
+        Console.Clear();
+        Console.WriteLine("--- Users and theiir items ---");
     
+        foreach (User u in users)
+    }
+        Console.WriteLine("User: " + u.Username);
+
+        bool userHasItems = false;
+        foreach (Item it in items)
+        {
+            if (it.OwnerUsername == u.Username)
+            {
+            Console.WriteLine(" - Id; " + it.Id + " | Name: " + it.Name + " | Description: " + it.Description); // Item row
+            userHasItems = true; // atleast one found
+            }
+        }
+
+        if (!userHasItems) // if none
+        {
+        Console.WriteLine(" (no items)");
+        }
+
+        Console.WriteLine("------"); // making spacing/separating for beter design
+    }
+    
+    Console.WriteLine("Press Enter to continue... ");
+    Console.ReadLine();
 }
+
+// Create a trade request and return updated nextradeId
+static int RequestTrade(List<Item> items, List<Trade> trades, User active_user, int nextTradeId)
+{
+    Console.Clear();  // clear screen 
+    Console.WriteLine("--- Request a trade ---"); // Title
+
+    bool foundAny = false; // track candidates
+    foreach (Item i in items) // loop items
+    {
+        if (i.OwnerUsername != active_user.Username)
+        {
+            Console.WriteLine("Id: " + i.Id + " | Name: " + i.Name 0 " | Owner: " + i.OwnerUsername); // show avaible trade candidate
+            foundAny = true;
+        }
+    }
+
+    if (!foundAny)
+    {
+        Console.WriteLine("No items avaible to request. "); // Feedback
+        Console.WriteLine("Press Enter to continue.. "); // Pause
+        Console.ReadLine(); // Waiting for user to press Enter
+        return nextTradeId; // Return unchanged counter
+    }
+
+    Console.Write("Enter the Item Id you want to request: "); // asking for an id 
+    string input = Console.ReadLine() ?? "";
+    int chosenId = 0;
+
+    
+
+
+}
+
