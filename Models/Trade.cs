@@ -1,34 +1,21 @@
-
-using System.ComponentModel.Design;
-using System.Data.Common;
-using System.Runtime.CompilerServices;
-
 namespace TradingApp;
 
-// 
+// Trade = a swap request between two users
 class Trade
 {
-    public int Id { get; set; } = 0; // unique trade id
+    public int Id { get; set; } = 0;                 // Unique trade id
+    public int ItemId { get; set; } = 0;             // The item involved
+    public string FromUsername { get; set; } = "";   // Who sent the request
+    public string ToUsername { get; set; } = "";     // Who receives the request (item owner)
+    public TradingStatus Status { get; set; } = TradingStatus.Pending; // Current status
 
-    public int ItemId { get; set; } = 0; // unique item id 
-
-    public string FromUsername { get; set; } = ""; // The requesting trade user
-
-    public string ToUsername { get; set; } = ""; // the user that's recieving the request (owner of the item)
-
-    public string Status { get; set; } = "pending";  // Trade status is goes in order "Pending", "Accepted or Denied", Completed
-
-    public Trade(int id, int itemId, string fromUsername, string toUsername, string status)
+    public Trade(int id, int itemId, string fromUsername, string toUsername, TradingStatus status)
     {
-        Id = id;   // saving TradeId
-
-        ItemId = itemId;  // saving Item id attached to the specific trade
-
-        FromUsername = fromUsername;  // saving requesting trade user
-
-        ToUsername = toUsername; // saving reciever 
-
-        Status = status; // saving trade status 
+        Id = id;                      // Save trade id
+        ItemId = itemId;              // Save item id
+        FromUsername = fromUsername;  // Save sender
+        ToUsername = toUsername;      // Save receiver
+        Status = status;              // Save status (enum)
     }
 }
 

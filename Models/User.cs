@@ -1,6 +1,7 @@
 using System.Diagnostics;
 namespace TradingApp;
 
+// User - A created user
 class User
 {
     public string Username { get; set; } = "";
