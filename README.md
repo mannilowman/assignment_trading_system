@@ -25,4 +25,4 @@ How to use it
   accepting a trade will move the item to its new owner.
 4. You can also see all completed trades, or log out and switch user.
 
-Nothing is saved to files or databases, everything just exists while the program is running. I kept it simple just for texting and learning.
+Nothing is saved to files or databases, everything just exists while the program is running. I kept it simple just for testing and learning.
